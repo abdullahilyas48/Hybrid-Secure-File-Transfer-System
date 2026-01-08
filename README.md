@@ -1,15 +1,56 @@
 # Hybrid Secure File Transfer System
 
+## Table of Contents
+1. [Overview](#overview)
+2. [Key Features](#key-features)
+3. [Tech Stack](#tech-stack)
+4. [Architecture](#architecture)
+5. [Installation](#installation)
+6. [Setup](#setup)
+7. [Usage](#usage)
+8. [API Reference](#api-reference)
+9. [Testing](#testing)
+10. [Security Notes](#security-notes)
+11. [Contributing](#contributing)
+12. [License](#license)
+13. [Authors](#authors)
+14. [Acknowledgments](#acknowledgments)
+
+    
+## Overview
+
 A secure file transfer application that combines symmetric (AES) and asymmetric (RSA) cryptography to ensure confidentiality, integrity, and secure key exchange over network sockets.
 
-## Features
+---
+## Key Features
 
-- **Hybrid Encryption**: Uses AES-256 for fast file encryption/decryption and RSA for secure key exchange
-- **Integrity Verification**: SHA-256 hashing to ensure data integrity
-- **Network Transfer**: Socket-based sender and receiver for file transfer over TCP
-- **Graphical User Interface**: Simple Tkinter-based GUI for easy file selection and sending
-- **Key Management**: Automated RSA key pair generation
-- **Testing Suite**: Comprehensive tests for cryptographic operations and roundtrip verification
+- **Confidential File Access**: Only the intended receiver can decrypt the transmitted file using their RSA-2048 private key.
+
+- **Hybrid Encryption**: Uses AES-256 for fast file encryption and RSA-2048 to securely encrypt and exchange the AES key.
+
+- **Integrity Verification**: Computes a SHA-256 hash of the original file to ensure contents cannot be modified without detection.
+
+- **Secure Key Protection**: Protects the AES key by encrypting it with the receiver’s RSA public key before transmission.
+
+- **Network Transfer**: Transmits all encrypted components (encrypted AES key, IV, ciphertext, and hash) over a TCP socket.
+
+- **Receiver-Side Reconstruction**: Reconstructs and decrypts the file on the receiver’s side using the decrypted AES key and IV.
+
+- **File Validation**: Verifies that the received file is identical to the original by comparing SHA-256 hashes.
+
+- **Key Management**: Automated RSA key pair generation for secure sender–receiver communication.
+
+- **Testing Suite**: Comprehensive tests for cryptographic operations and end-to-end roundtrip verification.
+---
+
+## Tech Stack
+- Language: Python 3.9.x
+- Cryptography: AES-256 (CBC), RSA-2048, SHA-256
+- Networking: TCP sockets (Python `socket`)
+- GUI: Tkinter
+- Key Management: PEM key files (public/private)
+- Testing: Python test scripts (crypto + end-to-end transfer)
+---
 
 ## Architecture
 
@@ -27,12 +68,17 @@ The system implements a hybrid cryptosystem:
    - Decrypts AES key using RSA private key
    - Decrypts file using AES key and IV
    - Verifies integrity by comparing hashes
-
+---
 ## Installation
 
-### Prerequisites
-- Python 3.6+
+### Prerequisites and Usage Notes
+- Python 3.9.x
 - pip for package management
+- Split terminals for sender and receiver
+- Virtual environment (optional but recommended to use)
+- Write sender side message in file "example_sample.txt" if not using GUI
+- Stored message in "decrypted_example_sample.txt" will be changed automatically after successful transfer and decryption.
+ 
 
 ### Dependencies
 ```bash
@@ -40,16 +86,14 @@ pip install pycryptodome
 ```
 
 ## Setup
-
-1. **Clone the repository**:
+1. **Clone the repository and navigate inside the folder**:
    ```bash
-   git clone https://github.com/yourusername/Hybrid-Secure-File-Transfer-System.git
    cd Hybrid-Secure-File-Transfer-System
    ```
 
 2. **Navigate to the Project directory**:
    ```bash
-   cd "Hybrid Secure File Transfer System/Project"
+   cd Project
    ```
 
 3. **Generate RSA keys (Receiver only)**:
@@ -68,9 +112,7 @@ pip install pycryptodome
 ### Command Line Interface
 
 #### Sender
-```bash
-python socket_sender.py --ip <receiver_ip> --port <port> --pubkey <receiver_public.pem> --file <file_to_send>
-```
+1. cd Hybrid Secure File Transfer System 
 
 Example:
 ```bash
@@ -154,11 +196,11 @@ Additional disk-based tests:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details
 
 ## Authors
 
-- Muhammad Abdullah (and team members)
+- Muhammad Abdullah and team members
 
 ## Acknowledgments
 
